@@ -1,1 +1,13 @@
-Hello this is test file to push from git to github then it will upload on server by jenkins pipeline
+pipeline {
+    agent any
+
+    stages {
+        stage('Hello') {
+            steps {
+                echo 'Hello World test2'
+                sh 'pwd'
+                sh 'ls'
+            }
+        }
+    }
+}
