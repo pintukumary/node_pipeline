@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: firstreplicaset
+  labels:
+    app: voatingapp
+spec:
+  replicas: 3
+  selector:
+    matchExpressions:
+      - key: app
+        operator: In
+        values:
+          - myapp1
+          - myapp2
+      - key: type
+        operator: NotIn
+        values:
+          - app
+  template:
+    metadata:
+      name: firstrcpod
+      labels:
+        app: myapp1
+    spec:
+      containers:
+        - name: firstcontainer
+          image: nginx
+

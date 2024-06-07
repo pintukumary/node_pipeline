@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: firstdeployment
+  labels:
+    name: firstdeploy
+spec:
+  replicas: 6
+  selector:
+    matchLabels:
+      app: myapp1
+  template:
+    metadata:
+      name: firstdeployment
+      labels:
+        app: myapp1
+    spec:
+      containers:
+        - name: firstcontainer
+          image: nginx
+

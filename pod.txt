@@ -1,0 +1,53 @@
+Name:             firstpod
+Namespace:        dem
+Priority:         0
+Service Account:  default
+Node:             worker/192.168.2.111
+Start Time:       Fri, 31 May 2024 08:54:58 +0000
+Labels:           type=app
+Annotations:      cni.projectcalico.org/containerID: 104d4eefd86ea44c2048fd51167853b1fb4bf822a013b53c05b7160135084a32
+                  cni.projectcalico.org/podIP: 172.18.171.75/32
+                  cni.projectcalico.org/podIPs: 172.18.171.75/32
+Status:           Running
+IP:               172.18.171.75
+IPs:
+  IP:  172.18.171.75
+Containers:
+  secondpod:
+    Container ID:   containerd://c780edb8b770412764e5408f132e7d8ea15f640b501afe5d26e71511dd674ba4
+    Image:          nginx
+    Image ID:       docker.io/library/nginx@sha256:0f04e4f646a3f14bf31d8bc8d885b6c951fdcf42589d06845f64d18aec6a3c4d
+    Port:           <none>
+    Host Port:      <none>
+    State:          Running
+      Started:      Fri, 31 May 2024 08:55:00 +0000
+    Ready:          True
+    Restart Count:  0
+    Environment:    <none>
+    Mounts:
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-gmcnk (ro)
+Conditions:
+  Type              Status
+  Initialized       True 
+  Ready             True 
+  ContainersReady   True 
+  PodScheduled      True 
+Volumes:
+  kube-api-access-gmcnk:
+    Type:                    Projected (a volume that contains injected data from multiple sources)
+    TokenExpirationSeconds:  3607
+    ConfigMapName:           kube-root-ca.crt
+    ConfigMapOptional:       <nil>
+    DownwardAPI:             true
+QoS Class:                   BestEffort
+Node-Selectors:              <none>
+Tolerations:                 node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
+                             node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
+Events:
+  Type    Reason     Age   From               Message
+  ----    ------     ----  ----               -------
+  Normal  Scheduled  78s   default-scheduler  Successfully assigned dem/firstpod to worker
+  Normal  Pulling    77s   kubelet            Pulling image "nginx"
+  Normal  Pulled     76s   kubelet            Successfully pulled image "nginx" in 1.487s (1.487s including waiting)
+  Normal  Created    76s   kubelet            Created container secondpod
+  Normal  Started    76s   kubelet            Started container secondpod
