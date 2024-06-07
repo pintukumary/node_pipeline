@@ -1,0 +1,13 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Hello') {
+            steps {
+                echo 'Hello World test88'
+                sh 'pwd'
+                sh 'ls'
+            }
+        }
+    }
+}
