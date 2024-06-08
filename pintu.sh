@@ -1,10 +1,18 @@
-#!/bin/bash
+pipeline {
+    agent any
 
-# Print the current working directory
-echo "Current directory:"
-pwd
+    stages {
+        stage('Run Script') {
+            steps {
+                script {
+                    // Checkout the repository
+                    checkout scm
 
-# List the contents of the current directory
-echo "Contents of the current directory:"
-ls -al
+                    // Execute the pintu.sh script
+                    sh 'sh pintu.sh'
+                }
+            }
+        }
+    }
+}
 
