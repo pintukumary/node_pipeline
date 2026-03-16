@@ -134,6 +134,17 @@ Resources:
           # Test and restart nginx
           nginx -t && systemctl restart nginx
           systemctl enable nginx
+          # Get a token first
+          TOKEN=$(curl -X PUT "http://169.254.169.254/latest/api/token" -H "X-aws-ec2-metadata-token-ttl-seconds: 21600")
+          # Use the token to get instance ID
+          INSTANCE_ID=$(curl -H "X-aws-ec2-metadata-token: $TOKEN" http://169.254.169.254/latest/meta-data/instance-id)
+          echo "Instance ID: $INSTANCE_ID"
+          # Register with target group
+          aws elbv2 register-targets \
+            --target-group-arn arn:aws:elasticloadbalancing:eu-west-2:521391205861:targetgroup/arken-frontend-dev-tg/4a57d51bb2d09d62 \
+            --targets Id=$INSTANCE_ID
+
+          echo "Instance registered with target group"
           echo "Setup completed" >> /var/log/user-data.log
 
       Tags:
