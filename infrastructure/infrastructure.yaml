@@ -289,9 +289,13 @@ Outputs:
     Value: !Ref CodeDeployDeploymentGroup
     Export:
       Name: !Sub "${ProjectName}-${Environment}-codedeploy-deployment-group"
-
   EC2InstanceRole:
     Description: IAM role ARN for the EC2 instance
-    Value: !GetAtt EC2InstanceRole.Arn
+    Value: !Sub "arn:aws:iam::${AWS::AccountId}:role/${ExistingRoleName}"
     Export:
       Name: !Sub "${ProjectName}-${Environment}-ec2-role-arn"
+  EC2InstanceProfile:
+    Description: Instance profile ARN for the EC2 instance
+    Value: !GetAtt EC2InstanceProfile.Arn
+    Export:
+      Name: !Sub "${ProjectName}-${Environment}-instance-profile-arn"
