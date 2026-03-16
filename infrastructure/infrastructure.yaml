@@ -13,6 +13,10 @@ Parameters:
   ArtifactBucketName:
     Type: String
     Description: Existing S3 bucket for artifacts
+  ExistingRoleName:
+    Type: String
+    Description: Name of the existing IAM role to attach to EC2
+    Default: "arken-frontend-dev-role"
 
 Mappings:
   EnvironmentConfig:
@@ -51,54 +55,17 @@ Conditions:
   IsProdEnvironment: !Equals [!Ref Environment, "prod"]
 
 Resources:
-  # IAM Role for EC2 Instance
-  EC2InstanceRole:
-    Type: AWS::IAM::Role
-    Properties:
-      RoleName: !Sub "${ProjectName}-${Environment}-ec2-role"
-      AssumeRolePolicyDocument:
-        Version: "2012-10-17"
-        Statement:
-          - Effect: Allow
-            Principal:
-              Service: ec2.amazonaws.com
-            Action: sts:AssumeRole
-      ManagedPolicyArns:
-        - arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore
-        - arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy
-      Policies:
-        - PolicyName: CodeDeployS3Access
-          PolicyDocument:
-            Version: "2012-10-17"
-            Statement:
-              - Effect: Allow
-                Action:
-                  - s3:GetObject
-                  - s3:ListBucket
-                Resource:
-                  - !Sub "arn:aws:s3:::${ArtifactBucketName}"
-                  - !Sub "arn:aws:s3:::${ArtifactBucketName}/*"
-                  - "arn:aws:s3:::aws-codedeploy-*/*"
-              - Effect: Allow
-                Action:
-                  - logs:CreateLogGroup
-                  - logs:CreateLogStream
-                  - logs:PutLogEvents
-                  - logs:DescribeLogStreams
-                Resource: "*"
-      Tags:
-        - Key: Name
-          Value: !Sub "${ProjectName}-${Environment}-ec2-role"
-        - Key: Environment
-          Value: !FindInMap [EnvironmentConfig, !Ref Environment, EC2TagValue]
-
-  # Instance Profile
   EC2InstanceProfile:
     Type: AWS::IAM::InstanceProfile
     Properties:
       InstanceProfileName: !Sub "${ProjectName}-${Environment}-instance-profile"
       Roles:
-        - !Ref EC2InstanceRole
+        - !Ref ExistingRoleName
+      Tags:
+        - Key: Name
+          Value: !Sub "${ProjectName}-${Environment}-instance-profile"
+        - Key: Environment
+          Value: !FindInMap [EnvironmentConfig, !Ref Environment, EC2TagValue]
 
   # EC2 Instance
   WebServerInstance:
