@@ -71,7 +71,7 @@ Resources:
   WebServerInstance:
     Type: AWS::EC2::Instance
     Properties:
-      ImageId: ami-0c76bd4bd302b30ec # Ubuntu 22.04 LTS in eu-west-2 (more stable for CodeDeploy)
+      ImageId: ami-0c17cb8e234335014 # Ubuntu 22.04 LTS in eu-west-2 (more stable for CodeDeploy)
       InstanceType: !FindInMap [EnvironmentConfig, !Ref Environment, InstanceType]
       KeyName: !FindInMap [EnvironmentConfig, !Ref Environment, KeyPairName]
       SecurityGroupIds:
