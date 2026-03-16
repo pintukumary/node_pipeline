@@ -85,56 +85,22 @@ Resources:
           #!/bin/bash
           exec > >(tee /var/log/user-data.log)
           exec 2>&1
-          
-          # Update system
+          # Update and install packages
           apt-get update -y
-          
-          # Install required packages
-          apt-get install -y ruby-full wget curl unzip nginx awscli
-          
-          # Verify Ruby installation
-          ruby --version
+          apt-get install -y ruby-full wget curl unzip nginx
           
           # Install AWS CLI v2
+          cd /tmp
           curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
           unzip awscliv2.zip
-          ./aws/install --update
-          
-          # Install SSM Agent (for Session Manager)
-          snap install amazon-ssm-agent --classic
-          systemctl enable snap.amazon-ssm-agent.amazon-ssm-agent.service
-          systemctl start snap.amazon-ssm-agent.amazon-ssm-agent.service
-          
+          ./aws/install
           # Install CodeDeploy agent
           cd /home/ubuntu
           wget https://aws-codedeploy-${AWS::Region}.s3.${AWS::Region}.amazonaws.com/latest/install
           chmod +x ./install
           ./install auto
-          
-          # Wait for installation to complete
           sleep 10
-          
-          # Start and enable CodeDeploy agent using service command (more reliable for Ubuntu)
           service codedeploy-agent start
-          
-          # Verify CodeDeploy agent is running
-          until service codedeploy-agent status | grep -q 'running\|active'; do
-            echo 'Waiting for CodeDeploy agent to start...'
-            sleep 5
-            service codedeploy-agent start
-          done
-          
-          echo 'CodeDeploy agent is running'
-          
-          # Install CloudWatch agent
-          wget https://s3.amazonaws.com/amazoncloudwatch-agent/ubuntu/amd64/latest/amazon-cloudwatch-agent.deb
-          dpkg -i -E ./amazon-cloudwatch-agent.deb
-          
-          # Create application directory
-          mkdir -p /var/www/html
-          echo "<h1>Welcome to ${ProjectName} - ${Environment} Environment</h1>" > /var/www/html/index.html
-          echo "<p>Instance ID: $(curl -s http://169.254.169.254/latest/meta-data/instance-id)</p>" >> /var/www/html/index.html
-          echo "<p>Environment: ${Environment}</p>" >> /var/www/html/index.html
           
           # Configure nginx
           cat <<'EOF' > /etc/nginx/sites-available/default
@@ -168,17 +134,8 @@ Resources:
           # Test and restart nginx
           nginx -t && systemctl restart nginx
           systemctl enable nginx
-          
-          # Set proper permissions
-          chown -R www-data:www-data /var/www/html
-          chmod -R 755 /var/www/html
-          
-          # Create CodeDeploy working directory
-          mkdir -p /opt/codedeploy-agent/deployment-root
-          chown -R root:root /opt/codedeploy-agent
-          
-          # Signal completion
-          echo "User data script completed successfully" >> /var/log/user-data.log
+          echo "Setup completed" >> /var/log/user-data.log
+
       Tags:
         - Key: Name
           Value: !Sub "${ProjectName}-${Environment}-web-server"
