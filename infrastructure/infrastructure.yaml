@@ -61,11 +61,6 @@ Resources:
       InstanceProfileName: !Sub "${ProjectName}-${Environment}-instance-profile"
       Roles:
         - !Ref ExistingRoleName
-      Tags:
-        - Key: Name
-          Value: !Sub "${ProjectName}-${Environment}-instance-profile"
-        - Key: Environment
-          Value: !FindInMap [EnvironmentConfig, !Ref Environment, EC2TagValue]
 
   # EC2 Instance
   WebServerInstance:
