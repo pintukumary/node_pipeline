@@ -19,11 +19,11 @@ Mappings:
     dev:
       InstanceType: "t3.small"
       VolumeSize: 30
-      VpcId: "vpc-09ed5ca46c7e0f86a"
-      SubnetId: "subnet-043e0f5347b69a97f"
+      VpcId: "vpc-06ffaaa589d7a9177"
+      SubnetId: "subnet-010308d4aa4ddbef4"
       EC2TagValue: "development"
       DeploymentConfig: "CodeDeployDefault.OneAtATime"
-      SecurityGroupId: "sg-0445c739d2fcd97a5"
+      SecurityGroupId: "sg-0e8c6b76998f1356c"
       KeyPairName: "cf-test-key"
       ApplicationPort: 80
     staging:
